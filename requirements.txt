@@ -1,0 +1,41 @@
+# KSKR Voice OS – Python dependencies
+#
+# Install all dependencies with:
+#   pip install -r requirements.txt
+#
+# Some packages are optional and only needed for specific features.
+# The system gracefully falls back when optional packages are missing.
+
+# ── Core Speech ──────────────────────────────────────────────────────────────
+SpeechRecognition>=3.10.0       # Microphone capture + Google Web Speech API
+pyaudio>=0.2.14                 # Audio I/O backend for SpeechRecognition
+
+# ── Text-to-Speech ───────────────────────────────────────────────────────────
+pyttsx3>=2.90                   # Offline TTS (no API key required)
+
+# ── NLP / AI Chat ────────────────────────────────────────────────────────────
+# Ollama is used as the primary AI backend (free, local).
+# Install Ollama separately from https://ollama.com/
+# For OpenAI, set openai_api_key in config/settings.json.
+
+# ── Voice Authentication (optional) ──────────────────────────────────────────
+# Option A – resemblyzer (preferred, better accuracy):
+#   pip install resemblyzer
+# Option B – librosa (lighter, used as fallback):
+numpy>=1.24.0
+librosa>=0.10.0                 # MFCC-based voice fingerprinting fallback
+
+# ── Windows Automation ───────────────────────────────────────────────────────
+pyautogui>=0.9.54               # Media keys, screenshots, mouse/keyboard control
+
+# ── Android REST API (optional) ──────────────────────────────────────────────
+flask>=3.0.0                    # REST API server for Android integration
+
+# ── Reminder scheduling ──────────────────────────────────────────────────────
+# Uses stdlib threading + sqlite3 – no extra packages required.
+
+# ── Memory (SQLite) ──────────────────────────────────────────────────────────
+# Uses stdlib sqlite3 – no extra packages required.
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+# All other utilities (json, re, threading, wave, queue, etc.) are stdlib.

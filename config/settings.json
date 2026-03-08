@@ -1,0 +1,69 @@
+{
+  "wake_words": ["hey kskr", "hello assistant", "hey assistant"],
+  "wake_word_sensitivity": 0.5,
+  "speech": {
+    "language": "en-IN",
+    "supported_languages": {
+      "English": "en-IN",
+      "Hindi": "hi-IN",
+      "Telugu": "te-IN",
+      "Tamil": "ta-IN",
+      "Kannada": "kn-IN"
+    },
+    "energy_threshold": 300,
+    "pause_threshold": 0.8,
+    "timeout": 5,
+    "phrase_time_limit": 15
+  },
+  "voice_auth": {
+    "enabled": true,
+    "threshold": 0.75,
+    "profile_path": "authentication/voice_profiles",
+    "num_enrollment_samples": 5
+  },
+  "ai_chat": {
+    "provider": "ollama",
+    "ollama_model": "llama3",
+    "ollama_url": "http://localhost:11434",
+    "openai_api_key": "",
+    "openai_model": "gpt-3.5-turbo",
+    "max_tokens": 512,
+    "temperature": 0.7,
+    "system_prompt": "You are KSKR, a helpful AI voice assistant for Windows. Answer concisely and clearly. You assist with productivity, coding, and general questions."
+  },
+  "tts": {
+    "rate": 170,
+    "volume": 1.0,
+    "voice_preference": "female"
+  },
+  "automation": {
+    "browser": "chrome",
+    "search_engine": "https://www.google.com/search?q="
+  },
+  "memory": {
+    "db_path": "memory/kskr_memory.db"
+  },
+  "reminders": {
+    "check_interval_seconds": 30
+  },
+  "android": {
+    "enabled": false,
+    "host": "0.0.0.0",
+    "port": 5050,
+    "secret_key": "change_this_secret_key_in_production"
+  },
+  "plugins": {
+    "directory": "plugins",
+    "enabled": true
+  },
+  "ui": {
+    "theme": "dark",
+    "title": "KSKR Voice OS",
+    "width": 900,
+    "height": 650
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/kskr_voice_os.log"
+  }
+}
