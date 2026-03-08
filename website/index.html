@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sai AI Voice Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Simple SVG favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>" />
+</head>
+<body>
+
+  <!-- ─── HEADER ───────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-icon">🎙️</span>
+        <span class="logo-text">Sai AI</span>
+      </div>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#install">Install</a>
+        <a href="#demo">Demo</a>
+        <a href="https://github.com/kskreddy2k7/KSKR-AI-Voice-Operating-System" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ─── HERO ─────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          <span class="gradient-text">Sai AI</span><br />
+          Voice Assistant
+        </h1>
+        <p class="hero-subtitle">
+          A next-generation, open-source AI voice assistant that listens
+          continuously, understands natural language, controls your Windows PC
+          and Android phone, and remembers what matters to you.
+        </p>
+        <div class="hero-actions">
+          <a href="#install" class="btn btn-primary">Get Started</a>
+          <a href="https://github.com/kskreddy2k7/KSKR-AI-Voice-Operating-System" target="_blank" rel="noopener" class="btn btn-outline">View on GitHub</a>
+        </div>
+        <div class="wake-words">
+          <span class="wake-badge">Hey Sai</span>
+          <span class="wake-badge">Hello Sai</span>
+          <span class="wake-badge">Ok Sai</span>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="pulse-ring"></div>
+        <div class="mic-circle">🎙️</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─────────────────────────────────────────────── -->
+  <section id="features" class="section">
+    <div class="container">
+      <h2 class="section-title">Core Features</h2>
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">🔊</div>
+          <h3>Wake Word Detection</h3>
+          <p>Always-on background listener activates only when it hears <em>Hey Sai</em>, <em>Hello Sai</em>, or <em>Ok Sai</em>.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multi-Language Recognition</h3>
+          <p>Supports English, Hindi, Telugu, Tamil, and Kannada with automatic microphone detection and noise filtering.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>AI Intent Engine</h3>
+          <p>Converts natural speech into structured intents. Backed by Ollama (local LLM) or OpenAI GPT with an offline fallback.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>Windows Control</h3>
+          <p>Open apps, create folders, search the web, control media playback, take screenshots, shutdown or restart.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Android Companion</h3>
+          <p>Sai Companion app connects over Wi-Fi REST API to send SMS, make calls, scroll feeds, and open apps on your phone.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗓️</div>
+          <h3>Reminders</h3>
+          <p>Set time-based reminders with natural language. Sai speaks and pops up an alert when the time arrives.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <h3>Plugin Architecture</h3>
+          <p>Drop Python files into the <code>plugins/</code> folder and they load automatically. Ships with Weather, Jokes, and Time plugins.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Memory System</h3>
+          <p>"Sai, remember my favourite language is Python." Stored in SQLite and recalled conversationally at any time.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Voice Authentication</h3>
+          <p>Enrol your voice print. Commands from unknown voices are rejected, keeping your assistant private.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ARCHITECTURE ─────────────────────────────────────────── -->
+  <section id="architecture" class="section section-dark">
+    <div class="container">
+      <h2 class="section-title">Architecture</h2>
+      <p class="section-subtitle">Fully modular, multi-threaded design for fast, reliable responses.</p>
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box input">🎤 Microphone</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">
+          <div class="arch-box">Wake Word Engine</div>
+          <div class="arch-box">Speech Recognizer</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">
+          <div class="arch-box highlight">Intent Engine (AI)</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">
+          <div class="arch-box">Command Router</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">
+          <div class="arch-box">Windows Controller</div>
+          <div class="arch-box">Android API</div>
+          <div class="arch-box">Memory / Reminders</div>
+          <div class="arch-box">Plugins</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-row">
+          <div class="arch-box output">🔈 TTS Response + GUI</div>
+        </div>
+      </div>
+
+      <div class="tech-stack">
+        <h3>Technology Stack</h3>
+        <div class="tech-grid">
+          <span class="tech-tag">Python 3.9+</span>
+          <span class="tech-tag">SpeechRecognition</span>
+          <span class="tech-tag">pyttsx3 TTS</span>
+          <span class="tech-tag">Ollama / OpenAI</span>
+          <span class="tech-tag">Flask REST API</span>
+          <span class="tech-tag">SQLite</span>
+          <span class="tech-tag">Tkinter GUI</span>
+          <span class="tech-tag">pyautogui</span>
+          <span class="tech-tag">ThreadPoolExecutor</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DEMO ──────────────────────────────────────────────────── -->
+  <section id="demo" class="section">
+    <div class="container">
+      <h2 class="section-title">Example Interactions</h2>
+      <div class="demo-terminal" id="demo-terminal">
+        <div class="terminal-bar">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="terminal-title">Sai AI – Live Demo</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <p class="system-msg">[SYSTEM] Sai AI started. Say a wake word or type a command.</p>
+        </div>
+      </div>
+      <div class="demo-controls">
+        <button class="btn btn-primary" id="demo-btn">▶ Run Demo</button>
+        <button class="btn btn-outline" id="reset-btn">↺ Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── INSTALLATION ─────────────────────────────────────────── -->
+  <section id="install" class="section section-dark">
+    <div class="container">
+      <h2 class="section-title">Installation</h2>
+      <div class="install-steps">
+
+        <div class="install-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Clone the repository</h3>
+            <pre><code>git clone https://github.com/kskreddy2k7/KSKR-AI-Voice-Operating-System.git
+cd KSKR-AI-Voice-Operating-System</code></pre>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Run the installer</h3>
+            <pre><code>python install.py</code></pre>
+            <p class="step-note">This installs all Python dependencies, sets up directories, and verifies your microphone.</p>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Optional – Install Ollama for local AI</h3>
+            <pre><code># Download from https://ollama.com
+ollama pull llama3</code></pre>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Launch Sai AI</h3>
+            <pre><code>python main.py           # GUI mode
+python main.py --no-gui  # headless CLI
+python main.py --enrol   # enroll your voice</code></pre>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="android-section">
+        <h3>📱 Android Companion</h3>
+        <ol>
+          <li>Set <code>"android": {"enabled": true}</code> in <code>config/settings.json</code>.</li>
+          <li>Build the APK from <code>android_app/</code> using Android Studio.</li>
+          <li>Install the APK on your Android phone.</li>
+          <li>Connect the phone to the same Wi-Fi network as your PC.</li>
+          <li>Enter your PC's IP address in the Sai Companion app.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ───────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2025 Sai AI Voice Assistant. Built with ❤️ and Python.</p>
+      <p>
+        <a href="https://github.com/kskreddy2k7/KSKR-AI-Voice-Operating-System" target="_blank" rel="noopener">GitHub Repository</a>
+        &nbsp;·&nbsp;
+        <a href="#install">Get Started</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
