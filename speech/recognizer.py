@@ -31,6 +31,8 @@ _DEFAULT_LANGUAGES = {
     "Kannada": "kn-IN",
 }
 
+_PREFERRED_MIC_KEYWORDS = ("microphone", "array", "input")
+
 
 def _load_config() -> dict:
     try:
@@ -50,6 +52,25 @@ def list_microphone_devices() -> List[str]:
     for idx, name in enumerate(devices):
         print(f"  [{idx}] {name}")
     return devices
+
+
+def get_best_microphone() -> Optional[int]:
+    """Return the best matching microphone index, or *None* for default mic.
+
+    Preference order uses common capture keywords in the microphone name.
+    """
+    try:
+        microphones = sr.Microphone.list_microphone_names()
+    except Exception as exc:
+        logger.warning("SpeechRecognizer: could not list microphones – %s", exc)
+        return None
+
+    for index, name in enumerate(microphones):
+        lowered = name.lower()
+        if any(keyword in lowered for keyword in _PREFERRED_MIC_KEYWORDS):
+            return index
+
+    return None
 
 
 class SpeechRecognizer:
@@ -82,12 +103,30 @@ class SpeechRecognizer:
         self.supported_languages: dict = cfg.get("supported_languages", _DEFAULT_LANGUAGES)
         self.timeout = timeout or cfg.get("timeout", 5)
         self.phrase_time_limit = phrase_time_limit or cfg.get("phrase_time_limit", 8)
-        self._device_index = device_index
 
         self._recognizer = sr.Recognizer()
-        self._recognizer.energy_threshold = energy_threshold or cfg.get("energy_threshold", 300)
-        self._recognizer.pause_threshold = cfg.get("pause_threshold", 0.8)
+        self._recognizer.energy_threshold = 300
         self._recognizer.dynamic_energy_threshold = True
+        self._recognizer.pause_threshold = 0.8
+
+        self._microphone_index = device_index if device_index is not None else get_best_microphone()
+        self._microphone_name = self._resolve_microphone_name(self._microphone_index)
+        print(f"Active microphone: {self._microphone_name}")
+        logger.info("SpeechRecognizer: active microphone -> %s", self._microphone_name)
+
+    def _resolve_microphone_name(self, index: Optional[int]) -> str:
+        """Get a readable microphone name for logging/diagnostics."""
+        if index is None:
+            return "Default microphone"
+
+        try:
+            microphones = sr.Microphone.list_microphone_names()
+        except Exception:
+            return f"Device index {index}"
+
+        if 0 <= index < len(microphones):
+            return microphones[index]
+        return f"Device index {index}"
 
     # ------------------------------------------------------------------
     # Public API
@@ -110,11 +149,7 @@ class SpeechRecognizer:
         effective_timeout = timeout if timeout is not None else self.timeout
         effective_ptl = phrase_time_limit if phrase_time_limit is not None else self.phrase_time_limit
 
-        mic_kwargs: dict = {}
-        if self._device_index is not None:
-            mic_kwargs["device_index"] = self._device_index
-
-        with sr.Microphone(**mic_kwargs) as source:
+        with sr.Microphone(device_index=self._microphone_index) as source:
             logger.info("SpeechRecognizer: adjusting for ambient noise…")
             self._recognizer.adjust_for_ambient_noise(source, duration=1)
             print("Listening...")
