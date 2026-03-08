@@ -22,7 +22,7 @@ ENV/
 *.sublime-*
 
 # KSKR runtime data
-logs/
+logs/*.log
 memory/*.db
 authentication/voice_profiles/
 
