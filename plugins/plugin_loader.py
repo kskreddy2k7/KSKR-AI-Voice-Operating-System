@@ -88,6 +88,17 @@ class PluginLoader:
         logger.info("PluginLoader: loaded %d plugin(s): %s", len(loaded), loaded)
         return loaded
 
+    def dispatch(self, command) -> Optional[str]:
+        """Dispatch *command* to the appropriate plugin.
+
+        Returns the plugin's response string, or *None* if no plugin matches.
+
+        This is the interface expected by :class:`~router.command_router.CommandRouter`.
+        Internally delegates to :meth:`handle`, which is preserved for backwards
+        compatibility and direct use by callers such as the main assistant loop.
+        """
+        return self.handle(command)
+
     def handle(self, command) -> Optional[str]:
         """Dispatch *command* to the appropriate plugin.
 

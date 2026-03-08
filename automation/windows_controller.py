@@ -299,3 +299,15 @@ class WindowsController:
             return f"close_app is only supported on Windows. Target: {target}"
 
         return f"Unknown system action: {action}"
+
+    def play_media(self, action: str) -> str:
+        """Convenience alias for :meth:`control_media` used by CommandRouter.
+
+        Handles all media control actions (play, pause, next, prev, volume_up,
+        volume_down, mute) – not just playback.
+        """
+        return self.control_media(action)
+
+    def system(self, action: str) -> str:
+        """Convenience alias for :meth:`system_command` used by CommandRouter."""
+        return self.system_command(action)
