@@ -1,5 +1,5 @@
 """
-Unit tests for KSKR Voice OS subsystems.
+Unit tests for Sai AI Voice OS subsystems.
 
 Run with:
     python -m pytest tests/ -v
@@ -150,7 +150,7 @@ class TestMemoryManager:
         assert memory.recall("color") == "green"
 
     def test_list_all(self, memory):
-        memory.store("name", "KSKR")
+        memory.store("name", "Sai AI")
         memory.store("city", "Hyderabad")
         items = memory.list_all()
         assert len(items) >= 2
@@ -351,8 +351,8 @@ from automation.windows_controller import WindowsController
 class TestWindowsController:
     def test_create_folder(self, tmp_path):
         ctrl = WindowsController()
-        result = ctrl.create_folder("test_folder_kskr", parent=str(tmp_path))
-        assert "created" in result.lower() or "test_folder_kskr" in result
+        result = ctrl.create_folder("test_folder_sai", parent=str(tmp_path))
+        assert "created" in result.lower() or "test_folder_sai" in result
 
     def test_create_folder_already_exists(self, tmp_path):
         ctrl = WindowsController()
@@ -362,7 +362,7 @@ class TestWindowsController:
 
     def test_open_folder_unknown(self):
         ctrl = WindowsController()
-        result = ctrl.open_folder("nonexistent_folder_xyz_kskr")
+        result = ctrl.open_folder("nonexistent_folder_xyz_sai")
         assert "not found" in result.lower()
 
     def test_search_web_builds_url(self, monkeypatch):

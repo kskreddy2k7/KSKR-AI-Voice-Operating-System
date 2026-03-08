@@ -1,112 +1,78 @@
-"""
-IntentEngine – Core NLP façade
---------------------------------
-Wraps :class:`~nlp.command_parser.CommandParser` and provides a thin, stable
-interface for the rest of the application to classify natural-language
-utterances without importing directly from the ``nlp`` package.
-
-Usage
-~~~~~
-    engine = IntentEngine()
-    cmd = engine.parse("open Chrome")
-    print(cmd.intent)   # "open_app"
-    print(cmd.target)   # "chrome"
-"""
-
 from __future__ import annotations
 
-import logging
-from typing import Optional
+import re
+from dataclasses import dataclass
+from typing import Any, Dict
 
-logger = logging.getLogger(__name__)
+from nlp.command_parser import CommandParser
+
+
+@dataclass
+class AIIntent:
+    intent: str
+    params: Dict[str, Any]
+    raw_text: str
 
 
 class IntentEngine:
-    """Parses natural-language text into structured :class:`~nlp.command_parser.Command` objects."""
+    """Converts natural language into assistant intents."""
 
     def __init__(self) -> None:
-        self._parser = self._init_parser()
+        self._parser = CommandParser()
 
-    # ------------------------------------------------------------------
-    # Initialisation
-    # ------------------------------------------------------------------
+    def detect(self, text: str) -> AIIntent:
+        clean = text.strip()
+        lower = clean.lower()
 
-    def _init_parser(self):
-        try:
-            from nlp.command_parser import CommandParser
+        # Communication intents for Android companion actions.
+        m = re.search(r"^(?:call|dial)\s+(.+)$", lower)
+        if m:
+            return AIIntent(intent="call_contact", params={"contact": m.group(1).strip()}, raw_text=clean)
 
-            return CommandParser()
-        except Exception as exc:  # noqa: BLE001
-            logger.error("CommandParser unavailable: %s", exc)
-            return None
+        m = re.search(r"^open\s+(.+?)\s+(?:on\s+phone|in\s+phone|on\s+mobile)$", lower)
+        if m:
+            return AIIntent(
+                intent="open_application",
+                params={"target": m.group(1).strip(), "source_intent": "open_app", "device": "phone"},
+                raw_text=clean,
+            )
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
+        m = re.search(r"^(?:send\s+(?:a\s+)?)?(?:message|sms|whatsapp)\s+to\s+(.+?)\s+saying\s+(.+)$", lower)
+        if m:
+            return AIIntent(
+                intent="send_message",
+                params={"contact": m.group(1).strip(), "message": m.group(2).strip()},
+                raw_text=clean,
+            )
 
-    def parse(self, text: str):
-        """Parse *text* and return a :class:`~nlp.command_parser.Command`.
+        m = re.search(r"^(?:scroll|swipe)\s+(.+)$", lower)
+        if m:
+            return AIIntent(intent="scroll_feed", params={"target": m.group(1).strip()}, raw_text=clean)
 
-        If the underlying parser is unavailable, returns a ``chat`` command
-        so the assistant can still respond conversationally.
+        m = re.search(r"^(play|pause)\s+(.+?)\s+(?:on\s+phone|in\s+phone|on\s+mobile)$", lower)
+        if m:
+            return AIIntent(
+                intent="play_media",
+                params={"action": m.group(1).strip(), "target": m.group(2).strip(), "device": "phone"},
+                raw_text=clean,
+            )
 
-        Parameters
-        ----------
-        text:
-            Raw utterance from the user (e.g. ``"open chrome"``).
-
-        Returns
-        -------
-        Command
-            A structured command object with at least ``.intent`` set.
-        """
-        if not text:
-            return self._fallback_command("", "chat")
-
-        if self._parser is None:
-            logger.warning("Parser not available – routing to chat fallback.")
-            return self._fallback_command(text, "chat")
-
-        try:
-            return self._parser.parse(text)
-        except Exception as exc:  # noqa: BLE001
-            logger.error("parse() error: %s", exc)
-            return self._fallback_command(text, "chat")
-
-    def _fallback_command(self, text: str, intent: str = "chat"):
-        """Create a minimal Command for use when parsing fails."""
-        try:
-            from nlp.command_parser import Command
-
-            return Command(intent=intent, raw_text=text)
-        except Exception:  # noqa: BLE001
-            # Last-resort: return a plain object with the required attributes
-            class _SimpleCommand:  # pylint: disable=too-few-public-methods
-                def __init__(self, intent_, text_):
-                    self.intent = intent_
-                    self.raw_text = text_
-                    self.target = ""
-                    self.params = {}
-                    self.confidence = 0.0
-
-            return _SimpleCommand(intent, text)
-
-    @property
-    def supported_intents(self) -> list[str]:
-        """List of intent labels the parser can recognise."""
-        return [
-            "open_app",
-            "open_folder",
-            "create_folder",
-            "search_web",
-            "play_media",
-            "reminder",
-            "memory_store",
-            "memory_query",
-            "system",
-            "time",
-            "date",
-            "joke",
-            "weather",
-            "chat",
-        ]
+        # Reuse existing parser for core desktop skills.
+        parsed = self._parser.parse(clean)
+        mapping = {
+            "open_app": "open_application",
+            "search_web": "search_web",
+            "play_media": "play_media",
+            "system": "system_control",
+            "chat": "chat_query",
+            "open_folder": "open_application",
+            "create_folder": "system_control",
+            "reminder": "system_control",
+            "memory_store": "chat_query",
+            "memory_query": "chat_query",
+        }
+        return AIIntent(
+            intent=mapping.get(parsed.intent, "chat_query"),
+            params={"target": parsed.target, "source_intent": parsed.intent, **parsed.params},
+            raw_text=clean,
+        )

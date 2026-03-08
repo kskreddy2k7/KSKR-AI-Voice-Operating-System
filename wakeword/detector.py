@@ -23,6 +23,7 @@ import threading
 from typing import Callable, List, Optional
 
 import speech_recognition as sr
+from speech.recognizer import get_best_microphone
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +36,10 @@ def _load_wake_words() -> List[str]:
     try:
         with open(_CONFIG_PATH, "r", encoding="utf-8") as fh:
             cfg = json.load(fh)
-        return [w.lower().strip() for w in cfg.get("wake_words", ["hey kskr"])]
+        return [w.lower().strip() for w in cfg.get("wake_words", ["hey sai", "hello sai", "ok sai"])]
     except Exception as exc:
         logger.warning("Could not load settings: %s – using default wake words.", exc)
-        return ["hey kskr", "hello kskr", "ok kskr", "hey assistant", "hello assistant"]
+        return ["hey sai", "hello sai", "ok sai"]
 
 
 class WakeWordDetector:
@@ -64,12 +65,11 @@ class WakeWordDetector:
         energy_threshold: int = 300,
     ) -> None:
         self._on_detected = on_detected
-        self.wake_words: List[str] = wake_words if wake_words is not None else _load_wake_words()
+        self._wake_words: List[str] = wake_words if wake_words is not None else _load_wake_words()
         self._energy_threshold = energy_threshold
         self._recognizer = sr.Recognizer()
         self._recognizer.energy_threshold = self._energy_threshold
-        self._recognizer.dynamic_energy_threshold = True
-        self._recognizer.pause_threshold = 0.8
+        self._recognizer.pause_threshold = 0.5
         self._stop_listening: Optional[Callable] = None
         self._running = False
         self._event_queue: queue.Queue = queue.Queue()
@@ -83,10 +83,10 @@ class WakeWordDetector:
         if self._running:
             return
         self._running = True
-        logger.info("WakeWordDetector: starting – listening for %s", self.wake_words)
-        print(f"Listening... (wake words: {self.wake_words})")
+        logger.info("WakeWordDetector: starting – listening for %s", self._wake_words)
+        mic_index = get_best_microphone()
         self._stop_listening = self._recognizer.listen_in_background(
-            sr.Microphone(), self._audio_callback, phrase_time_limit=4
+            sr.Microphone(device_index=mic_index), self._audio_callback, phrase_time_limit=4
         )
         # Dispatch thread so callbacks don't block the listener thread
         threading.Thread(target=self._dispatch_loop, daemon=True).start()
@@ -99,11 +99,6 @@ class WakeWordDetector:
             self._stop_listening = None
         logger.info("WakeWordDetector: stopped.")
 
-    @property
-    def is_running(self) -> bool:
-        """``True`` if the background listener is active."""
-        return self._running
-
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
@@ -114,8 +109,7 @@ class WakeWordDetector:
         try:
             text = recognizer.recognize_google(audio, language="en-IN").lower()
             logger.debug("WakeWordDetector heard: %s", text)
-            print(f"Recognized speech: {text}")
-            for wake_word in self.wake_words:
+            for wake_word in self._wake_words:
                 if wake_word in text:
                     self._event_queue.put(text)
                     break

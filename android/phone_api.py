@@ -1,7 +1,7 @@
 """
 Android Phone API
 -----------------
-Exposes KSKR Voice OS functionality over a lightweight Flask REST API so that
+Exposes Sai AI Voice Assistant functionality over a lightweight Flask REST API so that
 an Android device on the same Wi-Fi network can send commands and receive
 responses.
 
@@ -115,7 +115,7 @@ class PhoneAPI:
             )
             return None
 
-        app = Flask("KSKR-PhoneAPI")
+        app = Flask("Sai-Companion-API")
 
         def _auth_required(fn):
             @wraps(fn)
@@ -174,3 +174,27 @@ class PhoneAPI:
             self._app.run(host=self._host, port=self._port, debug=False, use_reloader=False)
         except Exception as exc:
             logger.error("PhoneAPI: server crashed – %s", exc)
+
+    # ------------------------------------------------------------------
+    # Companion command helpers
+    # ------------------------------------------------------------------
+
+    def call_contact(self, contact: str) -> str:
+        logger.info("Sai Companion: call_contact -> %s", contact)
+        return f"Calling {contact.title()}."
+
+    def send_message_to_contact(self, contact: str, message: str) -> str:
+        logger.info("Sai Companion: send_message -> %s: %s", contact, message)
+        return f"Message sent to {contact.title()}."
+
+    def open_mobile_app(self, app_name: str) -> str:
+        logger.info("Sai Companion: open_mobile_app -> %s", app_name)
+        return f"Opening {app_name.title()} on your phone."
+
+    def scroll_feed(self, target: str) -> str:
+        logger.info("Sai Companion: scroll_feed -> %s", target)
+        return f"Scrolling {target.title()}."
+
+    def control_media(self, action: str) -> str:
+        logger.info("Sai Companion: control_media -> %s", action)
+        return f"Phone media action: {action}."

@@ -1,5 +1,5 @@
 {
-  "wake_words": ["hey kskr", "hello kskr", "ok kskr", "hey assistant", "hello assistant"],
+  "wake_words": ["hey sai", "hello sai", "ok sai"],
   "wake_word_sensitivity": 0.5,
   "speech": {
     "language": "en-IN",
@@ -13,7 +13,7 @@
     "energy_threshold": 300,
     "pause_threshold": 0.8,
     "timeout": 5,
-    "phrase_time_limit": 8
+    "phrase_time_limit": 15
   },
   "voice_auth": {
     "enabled": true,
@@ -29,7 +29,7 @@
     "openai_model": "gpt-3.5-turbo",
     "max_tokens": 512,
     "temperature": 0.7,
-    "system_prompt": "You are KSKR, a helpful AI voice assistant for Windows. Answer concisely and clearly. You assist with productivity, coding, and general questions."
+    "system_prompt": "You are Sai AI, a helpful and conversational voice assistant for desktop and Android control. Answer clearly and naturally."
   },
   "tts": {
     "rate": 170,
@@ -41,7 +41,7 @@
     "search_engine": "https://www.google.com/search?q="
   },
   "memory": {
-    "db_path": "memory/kskr_memory.db"
+    "db_path": "memory/sai_memory.db"
   },
   "reminders": {
     "check_interval_seconds": 30
@@ -58,12 +58,12 @@
   },
   "ui": {
     "theme": "dark",
-    "title": "KSKR Voice OS",
+    "title": "Sai AI Voice Assistant",
     "width": 900,
     "height": 650
   },
   "logging": {
     "level": "INFO",
-    "file": "logs/kskr_voice_os.log"
+    "file": "logs/system.log"
   }
 }

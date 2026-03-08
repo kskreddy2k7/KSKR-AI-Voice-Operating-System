@@ -1,7 +1,7 @@
 """
 Plugin Loader
 -------------
-Dynamically discovers and loads KSKR Voice OS plugins from the ``plugins/``
+Dynamically discovers and loads Sai AI Voice OS plugins from the ``plugins/``
 directory.
 
 Plugin contract

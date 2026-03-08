@@ -74,7 +74,7 @@ class ChatAssistant:
         self._cfg = _load_config()
         self._system_prompt = system_prompt or self._cfg.get(
             "system_prompt",
-            "You are KSKR, a helpful AI voice assistant for Windows. "
+            "You are Sai AI, a helpful and conversational voice assistant for desktop and phone control. "
             "Answer concisely and clearly.",
         )
         self._history: List[Dict[str, str]] = []
@@ -187,9 +187,9 @@ class ChatAssistant:
         if "joke" in msg:
             return "Why do programmers prefer dark mode? Because light attracts bugs!"
         if "hello" in msg or "hi" in msg:
-            return "Hello! I'm KSKR, your AI voice assistant. How can I help you today?"
+            return "Hello! I am Sai AI. How can I help you today?"
         if "your name" in msg or "who are you" in msg:
-            return "I'm KSKR, your personal AI voice operating system."
+            return "I am Sai AI, your personal voice assistant."
         if "thank" in msg:
             return "You're welcome! Is there anything else I can help you with?"
         return (

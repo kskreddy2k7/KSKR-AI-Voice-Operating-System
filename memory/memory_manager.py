@@ -27,9 +27,9 @@ _CONFIG_PATH = os.path.join(
 def _load_db_path() -> str:
     try:
         with open(_CONFIG_PATH, "r", encoding="utf-8") as fh:
-            return json.load(fh).get("memory", {}).get("db_path", "memory/kskr_memory.db")
+            return json.load(fh).get("memory", {}).get("db_path", "memory/sai_memory.db")
     except Exception:
-        return "memory/kskr_memory.db"
+        return "memory/sai_memory.db"
 
 
 class MemoryManager:

@@ -52,14 +52,14 @@ class TextToSpeech:
             return
         logger.info("TTS: '%s'", text[:80])
         if self._engine is None:
-            print(f"[KSKR]: {text}")
+            print(f"[Sai AI]: {text}")
             return
         try:
             self._engine.say(text)
             self._engine.runAndWait()
         except Exception as exc:
             logger.error("TTS: speak failed – %s", exc)
-            print(f"[KSKR]: {text}")
+            print(f"[Sai AI]: {text}")
 
     def stop(self) -> None:
         if self._engine:

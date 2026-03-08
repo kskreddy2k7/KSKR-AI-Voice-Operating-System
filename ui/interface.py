@@ -1,12 +1,12 @@
 """
-KSKR Voice OS – Graphical Interface
+Sai AI Voice Assistant – Graphical Interface
 -------------------------------------
 Built with Tkinter (bundled with Python, no extra install required).
 
 Layout
 ~~~~~~
 ┌─────────────────────────────────────────────────────────┐
-│  KSKR VOICE OS                           ● LISTENING     │
+│  SAI AI VOICE ASSISTANT                  ● LISTENING     │
 ├─────────────────────────────────────────────────────────┤
 │  [Chat / transcript area – scrollable]                   │
 │                                                          │
@@ -65,8 +65,8 @@ def _load_config() -> dict:
         return {}
 
 
-class KSKRInterface:
-    """Tkinter-based GUI for KSKR Voice OS.
+class SaiInterface:
+    """Tkinter-based GUI for Sai AI Voice Assistant.
 
     Parameters
     ----------
@@ -105,7 +105,7 @@ class KSKRInterface:
             "Tamil": "ta-IN", "Kannada": "kn-IN",
         }).keys())
 
-        self._title = ui_cfg.get("title", "KSKR Voice OS")
+        self._title = ui_cfg.get("title", "Sai AI Voice Assistant")
         self._width = ui_cfg.get("width", 900)
         self._height = ui_cfg.get("height", 650)
         self._c = _DARK
@@ -173,7 +173,7 @@ class KSKRInterface:
         header.pack(fill=tk.X, side=tk.TOP)
 
         tk.Label(
-            header, text="⚙  KSKR VOICE OS",
+            header, text="Sai AI VOICE ASSISTANT",
             font=title_font, bg=self._c["accent"], fg=self._c["text"],
         ).pack(side=tk.LEFT, padx=15, pady=10)
 
@@ -278,7 +278,7 @@ class KSKRInterface:
         _btn(ctrl_frame, "🔐  Enrol Voice", self._on_enrol_click).pack(side=tk.LEFT, padx=4)
         _btn(ctrl_frame, "🗑  Clear Chat", self._clear_chat).pack(side=tk.RIGHT, padx=4)
 
-        self._append_system("KSKR Voice OS started. Say a wake word or type a command below.")
+        self._append_system("Sai AI started. Say a wake word or type a command below.")
 
     # ------------------------------------------------------------------
     # Event handlers
@@ -342,7 +342,7 @@ class KSKRInterface:
                     _, text, _ = item
                     short = text[:80] + ("…" if len(text) > 80 else "")
                     self._response_var.set(f"↳ {short}")  # type: ignore[union-attr]
-                    self.log_chat("KSKR", text)
+                    self.log_chat("Sai AI", text)
                 elif kind == "chat":
                     _, speaker, text = item
                     self._append_chat(speaker, text)
@@ -358,7 +358,7 @@ class KSKRInterface:
         assert self._chat_area is not None
         self._chat_area.configure(state=tk.NORMAL)
         ts = datetime.now().strftime("%H:%M")
-        tag = "user" if speaker != "KSKR" else "bot"
+        tag = "user" if speaker != "Sai AI" else "bot"
         self._chat_area.insert(tk.END, f"\n[{ts}] ", "time")
         self._chat_area.insert(tk.END, f"{speaker}: ", tag)
         self._chat_area.insert(tk.END, f"{text}\n")
@@ -391,3 +391,4 @@ class KSKRInterface:
             bg=self._c["highlight"], fg=self._c["text"], relief=tk.FLAT, padx=20,
         ).pack(pady=(0, 15))
         popup.after(10000, popup.destroy)  # auto-close after 10 s
+

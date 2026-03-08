@@ -116,7 +116,7 @@ class ReminderManager:
     ) -> None:
         cfg = _load_config()
         self._on_due = on_due or (lambda r: logger.info("Reminder due: %s", r))
-        _db = db_path or os.path.join("memory", "kskr_memory.db")
+        _db = db_path or os.path.join("memory", "sai_memory.db")
         os.makedirs(os.path.dirname(os.path.abspath(_db)), exist_ok=True)
         self._conn = sqlite3.connect(_db, check_same_thread=False)
         self._create_tables()

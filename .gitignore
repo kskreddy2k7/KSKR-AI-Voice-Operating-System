@@ -21,8 +21,8 @@ ENV/
 .idea/
 *.sublime-*
 
-# KSKR runtime data
-logs/*.log
+# Sai AI runtime data
+logs/
 memory/*.db
 authentication/voice_profiles/
 

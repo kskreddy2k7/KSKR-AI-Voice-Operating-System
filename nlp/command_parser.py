@@ -15,7 +15,7 @@ Supported intents
 - search_web        – "search machine learning tutorials"
 - play_media        – "play music", "pause video"
 - reminder          – "remind me to study at 7 PM"
-- memory_store      – "remember that my name is KSKR"
+- memory_store      – "remember that my name is Sai AI"
 - memory_query      – "what do you know about me?"
 - chat              – general question / anything else
 - system            – "shutdown", "restart", "volume up"
