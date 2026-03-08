@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from typing import Optional
+from typing import List, Optional
 
 import speech_recognition as sr
 
@@ -41,6 +41,17 @@ def _load_config() -> dict:
         return {}
 
 
+def list_microphone_devices() -> List[str]:
+    """Return all available microphone device names.
+
+    Prints the list to stdout for diagnostic purposes and returns it.
+    """
+    devices = sr.Microphone.list_microphone_names()
+    for idx, name in enumerate(devices):
+        print(f"  [{idx}] {name}")
+    return devices
+
+
 class SpeechRecognizer:
     """Records a single utterance from the microphone and returns its text.
 
@@ -54,20 +65,24 @@ class SpeechRecognizer:
         Maximum seconds of speech per utterance.
     energy_threshold:
         Microphone energy level cutoff.
+    device_index:
+        Microphone device index.  When *None* the system default is used.
     """
 
     def __init__(
         self,
         language: Optional[str] = None,
         timeout: int = 5,
-        phrase_time_limit: int = 15,
+        phrase_time_limit: int = 8,
         energy_threshold: int = 300,
+        device_index: Optional[int] = None,
     ) -> None:
         cfg = _load_config()
         self.language = language or cfg.get("language", "en-IN")
         self.supported_languages: dict = cfg.get("supported_languages", _DEFAULT_LANGUAGES)
         self.timeout = timeout or cfg.get("timeout", 5)
-        self.phrase_time_limit = phrase_time_limit or cfg.get("phrase_time_limit", 15)
+        self.phrase_time_limit = phrase_time_limit or cfg.get("phrase_time_limit", 8)
+        self._device_index = device_index
 
         self._recognizer = sr.Recognizer()
         self._recognizer.energy_threshold = energy_threshold or cfg.get("energy_threshold", 300)
@@ -78,21 +93,41 @@ class SpeechRecognizer:
     # Public API
     # ------------------------------------------------------------------
 
-    def listen(self) -> Optional[str]:
-        """Capture one utterance and return its text, or *None* on failure."""
-        with sr.Microphone() as source:
+    def listen(
+        self,
+        timeout: Optional[int] = None,
+        phrase_time_limit: Optional[int] = None,
+    ) -> Optional[str]:
+        """Capture one utterance and return its text, or *None* on failure.
+
+        Parameters
+        ----------
+        timeout:
+            Override the instance-level timeout for this call only.
+        phrase_time_limit:
+            Override the instance-level phrase_time_limit for this call only.
+        """
+        effective_timeout = timeout if timeout is not None else self.timeout
+        effective_ptl = phrase_time_limit if phrase_time_limit is not None else self.phrase_time_limit
+
+        mic_kwargs: dict = {}
+        if self._device_index is not None:
+            mic_kwargs["device_index"] = self._device_index
+
+        with sr.Microphone(**mic_kwargs) as source:
             logger.info("SpeechRecognizer: adjusting for ambient noise…")
-            self._recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            self._recognizer.adjust_for_ambient_noise(source, duration=1)
+            print("Listening...")
             logger.info(
                 "SpeechRecognizer: listening (lang=%s, timeout=%ss)…",
                 self.language,
-                self.timeout,
+                effective_timeout,
             )
             try:
                 audio = self._recognizer.listen(
                     source,
-                    timeout=self.timeout,
-                    phrase_time_limit=self.phrase_time_limit,
+                    timeout=effective_timeout,
+                    phrase_time_limit=effective_ptl,
                 )
             except sr.WaitTimeoutError:
                 logger.debug("SpeechRecognizer: listen timed out (no speech).")
@@ -124,6 +159,7 @@ class SpeechRecognizer:
     def _transcribe(self, audio: sr.AudioData) -> Optional[str]:
         try:
             text = self._recognizer.recognize_google(audio, language=self.language)
+            print(f"Recognized speech: {text}")
             logger.info("SpeechRecognizer: recognised → '%s'", text)
             return text
         except sr.UnknownValueError:
