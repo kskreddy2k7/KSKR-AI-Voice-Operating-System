@@ -91,7 +91,7 @@ class SpeechEngine:
                 logger.warning("TTS speak failed: %s", exc)
         print(f"[KSKR] {text}")
 
-    def listen(self, timeout: int = 5, phrase_time_limit: int = 15) -> Optional[str]:
+    def listen(self, timeout: int = 5, phrase_time_limit: int = 8) -> Optional[str]:
         """Capture a single utterance from the microphone and return its text.
 
         Parameters

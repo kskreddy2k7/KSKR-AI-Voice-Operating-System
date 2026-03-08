@@ -51,7 +51,7 @@ class WakeWordEngine:
         try:
             from wakeword.detector import WakeWordDetector
 
-            return WakeWordDetector(on_wake=self._on_wake)
+            return WakeWordDetector(on_detected=self._on_wake)
         except Exception as exc:  # noqa: BLE001
             logger.warning("WakeWordDetector unavailable: %s", exc)
             return None

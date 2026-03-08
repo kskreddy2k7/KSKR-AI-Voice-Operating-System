@@ -1,5 +1,5 @@
 {
-  "wake_words": ["hey kskr", "hello assistant", "hey assistant"],
+  "wake_words": ["hey kskr", "hello kskr", "ok kskr", "hey assistant", "hello assistant"],
   "wake_word_sensitivity": 0.5,
   "speech": {
     "language": "en-IN",
@@ -13,7 +13,7 @@
     "energy_threshold": 300,
     "pause_threshold": 0.8,
     "timeout": 5,
-    "phrase_time_limit": 15
+    "phrase_time_limit": 8
   },
   "voice_auth": {
     "enabled": true,

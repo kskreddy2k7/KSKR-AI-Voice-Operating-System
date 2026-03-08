@@ -139,7 +139,7 @@ class TestSpeechEngine:
 
         result = engine.listen(timeout=3)
         assert result == "open chrome"
-        rec_mock.listen.assert_called_once_with(timeout=3, phrase_time_limit=15)
+        rec_mock.listen.assert_called_once_with(timeout=3, phrase_time_limit=8)
 
 
 # ---------------------------------------------------------------------------
